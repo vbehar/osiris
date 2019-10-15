@@ -111,7 +111,6 @@ func (d *dynamicProxy) ListenAndServe(ctx context.Context) error {
 				continue
 			}
 			go func() {
-				defer conn.Close()
 				if err := d.serveConnectionFn(conn); err != nil {
 					glog.Errorf("Error serving connection: %s", err)
 				}
