@@ -23,6 +23,7 @@ type proxy struct {
 	requestCount         *uint64
 	singlePortProxies    []*singlePortProxy
 	healthzAndMetricsSvr *http.Server
+	ignoredPaths         map[string]struct{}
 }
 
 func NewProxy(cfg Config) (Proxy, error) {
@@ -36,10 +37,11 @@ func NewProxy(cfg Config) (Proxy, error) {
 			Addr:    fmt.Sprintf(":%d", cfg.MetricsAndHealthPort),
 			Handler: healthzAndMetricsMux,
 		},
+		ignoredPaths: cfg.IgnoredPaths,
 	}
 	for proxyPort, appPort := range cfg.PortMappings {
 		singlePortProxy, err :=
-			newSinglePortProxy(proxyPort, appPort, p.requestCount)
+			newSinglePortProxy(proxyPort, appPort, p.requestCount, p.ignoredPaths)
 		if err != nil {
 			return nil, err
 		}

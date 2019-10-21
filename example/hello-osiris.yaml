@@ -39,6 +39,8 @@ spec:
     metadata:
       labels:
         app: hello-osiris
+      annotations:
+        osiris.deislabs.io/ignoredPaths: "/first/path,/second-path"
     spec:
       containers:
       - name: hello-osiris
